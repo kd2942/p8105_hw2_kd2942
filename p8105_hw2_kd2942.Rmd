@@ -3,3 +3,16 @@ title: "p8105_hw2_kd2942"
 output: github_document
 date: "2024-10-02"
 ---
+
+#setting up markdown document
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, message = FALSE)
+```
+
+#loading libraries
+```{r libraries}
+library(tidyverse)
+library(readxl)
+```
+```
+
