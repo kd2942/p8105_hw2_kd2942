@@ -15,6 +15,7 @@ library(tidyverse)
 library(readxl)
 ```
 
+**PROBLEM 1**
 #read in Subway dataset
 ```{r}
 subway_df=read.csv("./NYC_Transit_Subway_Entrance_And_Exit_Data.csv")
@@ -23,7 +24,78 @@ subway_df=janitor::clean_names(subway_df)
 
 #taking a look at the data 
 ```{r}
-
+subway_df
+skimr::skim(subway_df)
 ```
 
+## 'select'
+```{r}
+subway_df = select(subway_df, line, station_name, station_latitude, station_longitude, route1:route11, entry, vending, entrance_type, ada)
+```
+
+##converting entry from character to logical variable
+```{r}
+mutate(subway_df, entry = ifelse(subway_df$entry =="YES", TRUE, FALSE))
+view(subway_df)
+```
+
+#writing about dataset
+The data set contains the variables subway_df, line, station_name, station_latitude, station_longitude, route1, route2, route3, route4, route5, route6, route7, route8, route9, route10, route11, entry, vending, entrance_type, and ada. Data cleaning steps so far have included cleaning variable names, selecting certain variables, and turning entry into a logical variable. This data is not tidy, as there are missing data values and remaining inconsistencies between variables type (i.e. some route variables are integers while others are character variables).
+
+##distinct stations
+```{r}
+subway_df_distinct = distinct(subway_df,station_name, line)
+view(subway_df_distinct)
+```
+There are 465 distinct stations in the NYC subway. 
+
+##ADA compliance
+```{r}
+filter(subway_df, ada =="TRUE")
+subway_df
+```
+There are 468 stations that are ADA compliant.
+
+##station exits and entrances without vending that allow entrance
+```{r}
+view(filter(subway_df, vending=="NO"))
+view(filter(subway_df, vending == "NO", entry == "YES"))
+```
+There are 183 entrances/exits that do not have vending. Of the entrances and exits that do not have vending, 69 allow entry. 69/183 = 0.37705 or **37.705%**
+
+##distinct trains serving A station and their ADA compliance
+```{r eval=FALSE}
+subway_df %>%
+  col_types= cols(Route8 = "c", Route9 = "c", Route10 = "c", Route11 = "c")%>%
+  pivot_longer(
+    route1:route11,
+    names_to = "route_number",
+    values_to = "route") %>% 
+  filter(route == "A") %>%
+  select(station_name, line) %>% 
+  distinct()
+
+subway_df %>% 
+  pivot_longer(
+    route1:route11,
+    names_to = "route_number",
+    values_to = "route") %>% 
+  filter(route == "A", ada == TRUE) %>% 
+  select(station_name, line) %>%
+  distinct()
+```
+
+**PROBLEM 2**
+#read in Mr.Trash dataset
+```{r}
+trash_df = read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet="Mr. Trash Wheel",na = c("NA", ".", "") )
+trash_df
+```
+
+#clean Mr.trash dataset
+```{r}
+trash_df=janitor::clean_names(trash_df)
+skimr::skim(trash_df)
+drop_na(trash_df, )
+```
 
