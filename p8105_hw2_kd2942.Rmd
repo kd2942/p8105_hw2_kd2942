@@ -14,5 +14,16 @@ knitr::opts_chunk$set(collapse = TRUE, message = FALSE)
 library(tidyverse)
 library(readxl)
 ```
+
+#read in Subway dataset
+```{r}
+subway_df=read.csv("./NYC_Transit_Subway_Entrance_And_Exit_Data.csv")
+subway_df=janitor::clean_names(subway_df)
 ```
+
+#taking a look at the data 
+```{r}
+
+```
+
 
