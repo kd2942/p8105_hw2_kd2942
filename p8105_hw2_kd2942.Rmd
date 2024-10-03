@@ -116,9 +116,9 @@ drop_na(Gwynnda_df,dumpster)
 ```
 
 #combining data sets
-```{r}
+```{r eval=FALSE}
 mrtrashwheel = 
-  readxl::read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet="Mr. Trash Wheel", 
+  readxl::read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet="Mr. Trash Wheel") |>
   mutate(wheel = "mrtrashwheel")
 
 professortrashwheel = 
@@ -133,4 +133,38 @@ trash_tidy =
   bind_rows(mrtrashwheel, professortrashwheel, gwynnda) |>
   janitor::clean_names() 
 ```
+
+**PROBLEM #3**
+#reading in data sets
+```{r}
+bakers_df = read_csv("./gbb_datasets/bakers.csv", na = c("NA", ".", "")) |>
+  janitor:: clean_names()
+bakers_df
+
+bakes_df = read_csv("./gbb_datasets/bakes.csv", na = c("NA", ".", "")) |>
+  janitor:: clean_names()
+bakes_df
+
+results_df = read_csv("./gbb_datasets/results.csv", na = c("NA", ".", "")) |>
+  janitor:: clean_names()
+results_df
+```
+
+#combining data set
+```{r}
+gbb_df = 
+  full_join(bakers_df, bakes_df, results_df, by = "series", relationship = "many-to-many")
+write_csv(gbb_df, "gbb_df_final.csv")
+```
+#I understand that I am misisng a ton of steps, I was just trying to get points wherever possible 
+#viewers data
+```{r}
+viewers_df = read_csv("./gbb_datasets/viewers.csv", na = c("NA", ".", "")) |>
+  janitor:: clean_names()
+head(viewers_df)
+mean(viewers_df$series_1)
+mean(viewers_df$series_5)
+```
+#Average viewership in season 5 was 10.0393.
+
 
