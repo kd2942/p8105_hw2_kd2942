@@ -84,18 +84,53 @@ subway_df %>%
   select(station_name, line) %>%
   distinct()
 ```
+#Coded eval=false because I did not want knitting to be affected by my inability to figure out the above code.
+
 
 **PROBLEM 2**
 #read in Mr.Trash dataset
 ```{r}
-trash_df = read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet="Mr. Trash Wheel",na = c("NA", ".", "") )
+trash_df = read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet="Mr. Trash Wheel", na = c("NA", ".", ""))
 trash_df
 ```
 
 #clean Mr.trash dataset
 ```{r}
 trash_df=janitor::clean_names(trash_df)
+drop_na(trash_df,dumpster)
 skimr::skim(trash_df)
-drop_na(trash_df, )
+```
+
+#professor trash wheel dataset: read and clean
+```{r}
+professor_df = read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet="Professor Trash Wheel", na = c("NA", ".", "")) 
+professor_df=janitor::clean_names(professor_df)
+drop_na(professor_df,dumpster)
+```
+
+#gwynnda trash wheel dataset: read and clean
+```{r}
+Gwynnda_df = read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet="Gwynnda Trash Wheel", na = c("NA", ".", "")) 
+Gwynnda_df=janitor::clean_names(Gwynnda_df)
+drop_na(Gwynnda_df,dumpster)
+```
+
+#combining data sets
+```{r}
+mrtrashwheel = 
+  readxl::read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet="Mr. Trash Wheel", 
+  mutate(wheel = "mrtrashwheel")
+
+professortrashwheel = 
+  readxl::read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet = "Professor Trash Wheel") |>
+  mutate(movie = "professortrashwheel")
+
+gwynnda = 
+  readxl::read_excel("./202409 Trash Wheel Collection Data.xlsx", sheet="Gwynnda Trash Wheel") |>
+  mutate(movie = "gwynnda")
+
+trash_tidy = 
+  bind_rows(mrtrashwheel, professortrashwheel, gwynnda) |>
+  janitor::clean_names() 
 ```
 
